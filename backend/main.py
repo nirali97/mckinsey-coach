@@ -2,15 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict
-import google.generativeai as genai
 import os
 import json
+import httpx
 from dotenv import load_dotenv
 
 load_dotenv()
-
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
 
 app = FastAPI()
 
@@ -31,7 +28,8 @@ def health():
     return {"status": "ok"}
 
 @app.post("/chat")
-def chat(req: ChatRequest):
+async def chat(req: ChatRequest):
+    api_key = os.getenv("GEMINI_API_KEY")
     history_text = "\n".join([f"{m['role']}: {m['content']}" for m in req.history])
 
     prompt = f"""You are a strict McKinsey partner conducting a {req.session_type} interview.
@@ -39,7 +37,7 @@ def chat(req: ChatRequest):
 Conversation so far:
 {history_text}
 
-Respond ONLY with valid JSON in this exact format, no extra text:
+Respond ONLY with valid JSON, no extra text:
 {{
   "assessment": {{
     "score": <1-10>,
@@ -53,17 +51,21 @@ Respond ONLY with valid JSON in this exact format, no extra text:
   "next_question": "<your next interview question>"
 }}
 
-If this is the first message (no user answer yet), set assessment to null and just ask an opening question."""
+If no user answer yet, set assessment to null and just ask an opening question."""
 
-    response = model.generate_content(prompt)
-    text = response.text.strip().replace("```json", "").replace("```", "").strip()
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}",
+            json={"contents": [{"parts": [{"text": prompt}]}]},
+            timeout=30
+        )
+    
+    text = response.json()["candidates"][0]["content"]["parts"][0]["text"]
+    text = text.strip().replace("```json", "").replace("```", "").strip()
 
     try:
         data = json.loads(text)
     except:
-        data = {
-            "assessment": None,
-            "next_question": "Tell me about a time you solved a complex business problem."
-        }
+        data = {"assessment": None, "next_question": "Tell me about a time you solved a complex business problem."}
 
     return data
