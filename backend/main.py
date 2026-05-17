@@ -59,12 +59,13 @@ If no user answer yet, set assessment to null and just ask an opening question."
             json={"contents": [{"parts": [{"text": prompt}]}]},
             timeout=30
         )
-    
+
     resp_json = response.json()
-if "candidates" not in resp_json:
-    print("Gemini error:", resp_json)
-    return {"assessment": None, "next_question": "Tell me about a time you solved a complex business problem."}
-text = resp_json["candidates"][0]["content"]["parts"][0]["text"]
+    if "candidates" not in resp_json:
+        print("Gemini error:", resp_json)
+        return {"assessment": None, "next_question": "Tell me about a time you solved a complex business problem."}
+    
+    text = resp_json["candidates"][0]["content"]["parts"][0]["text"]
     text = text.strip().replace("```json", "").replace("```", "").strip()
 
     try:
