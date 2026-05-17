@@ -40,11 +40,11 @@ Conversation so far:
 Respond ONLY with valid JSON, no extra text, no markdown:
 {{
   "assessment": {{
-    "score": 7,
-    "structure": 7,
-    "clarity": 7,
-    "business_acumen": 7,
-    "professionalism": 7,
+    "score": 1,
+    "structure": 1,
+    "clarity": 1,
+    "business_acumen": 1,
+    "professionalism": 1,
     "feedback": "your feedback here",
     "what_good_looks_like": "example here"
   }},
