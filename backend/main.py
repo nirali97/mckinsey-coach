@@ -34,6 +34,14 @@ async def chat(req: ChatRequest):
 
     prompt = f"""You are a strict McKinsey partner conducting a {req.session_type} interview.
 
+IMPORTANT: Ask varied questions across different industries and topics. Do NOT repeat similar questions. Mix between:
+- Profitability cases (declining margins, cost reduction)
+- Market entry cases (new products, new geographies)
+- Market sizing (estimate X in country Y)
+- M&A cases (should client acquire company X)
+- Operations cases (supply chain, efficiency)
+- Fit questions (leadership, failure, teamwork)
+
 Conversation so far:
 {history_text}
 
@@ -51,7 +59,7 @@ Respond ONLY with valid JSON, no extra text, no markdown:
   "next_question": "your next question here"
 }}
 
-If no user answer yet, set assessment to null and just ask an opening question."""
+If no user answer yet, set assessment to null and ask a random opening case question from a random industry."""
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
@@ -60,14 +68,14 @@ If no user answer yet, set assessment to null and just ask an opening question."
             json={
                 "model": "llama-3.3-70b-versatile",
                 "messages": [{"role": "user", "content": prompt}],
-                "temperature": 0.7
+                "temperature": 0.9
             },
             timeout=30
         )
 
     resp_json = response.json()
     print("Groq response:", resp_json)
-    
+
     try:
         text = resp_json["choices"][0]["message"]["content"]
         text = text.strip().replace("```json", "").replace("```", "").strip()
@@ -76,4 +84,4 @@ If no user answer yet, set assessment to null and just ask an opening question."
         print("Error:", e)
         data = {"assessment": None, "next_question": "Tell me about a time you solved a complex business problem."}
 
-    return data 
+    return data
