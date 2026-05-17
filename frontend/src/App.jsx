@@ -58,7 +58,7 @@ export default function App() {
     setHistory([])
     setScores([])
     setLoading(true)
-    const seed = [{ role: "user", content: `Start a ${sessionType} interview session. Ask me the first question.` }]
+    const seed = [{ role: "user", content: `Start a fresh ${sessionType} interview session. Ask me a completely new and different opening question. Be creative and vary the topic.` }]
     try {
       const res = await axios.post(`${API}/chat`, { history: seed, session_type: sessionType })
       const question = res.data.next_question
