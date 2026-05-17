@@ -70,7 +70,9 @@ If no user answer yet, set assessment to null and just ask an opening question."
 
     try:
         data = json.loads(text)
-    except:
+    except Exception as e:
+        print("JSON parse error:", e)
+        print("Raw text:", text)
         data = {"assessment": None, "next_question": "Tell me about a time you solved a complex business problem."}
 
     return data
