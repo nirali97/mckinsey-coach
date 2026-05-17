@@ -60,7 +60,11 @@ If no user answer yet, set assessment to null and just ask an opening question."
             timeout=30
         )
     
-    text = response.json()["candidates"][0]["content"]["parts"][0]["text"]
+    resp_json = response.json()
+if "candidates" not in resp_json:
+    print("Gemini error:", resp_json)
+    return {"assessment": None, "next_question": "Tell me about a time you solved a complex business problem."}
+text = resp_json["candidates"][0]["content"]["parts"][0]["text"]
     text = text.strip().replace("```json", "").replace("```", "").strip()
 
     try:
