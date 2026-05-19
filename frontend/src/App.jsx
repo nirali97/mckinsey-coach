@@ -111,9 +111,9 @@ export default function App() {
           </button>
         ))}
         <button onClick={startSession} style={{ marginLeft: "auto", padding: "5px 14px", borderRadius: 20,
-          border: "1px solid #d1d5db", cursor: "pointer", fontSize: 13, background: "white" }}>
-          New session
-        </button>
+  border: "1px solid #374151", cursor: "pointer", fontSize: 13, background: "#374151", color: "white" }}>
+  New session
+</button>
         <span style={{ fontSize: 13, color: "#6b7280" }}>Avg: <strong>{avg}</strong></span>
       </div>
 
