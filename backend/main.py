@@ -22,7 +22,6 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     history: List[Dict[str, str]]
     session_type: str
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -32,18 +31,21 @@ async def chat(req: ChatRequest):
     api_key = os.getenv("GROQ_API_KEY")
     history_text = "\n".join([f"{m['role']}: {m['content']}" for m in req.history])
 
-    prompt = f"""You are a strict McKinsey partner conducting a {req.session_type} interview.
+    prompt = f"""You are an extremely strict and demanding McKinsey senior partner conducting a high-stakes consulting interview. You have zero tolerance for vague, unstructured, or incomplete answers. You expect MBA-level rigor.
 
-IMPORTANT: Ask varied questions across different industries and topics. Do NOT repeat similar questions. Mix between:
-- Profitability cases (declining margins, cost reduction)
-- Market entry cases (new products, new geographies)
-- Market sizing (estimate X in country Y)
-- M&A cases (should client acquire company X)
-- Operations cases (supply chain, efficiency)
-- Fit questions (leadership, failure, teamwork)
+IMPORTANT: Ask varied questions across different industries. Mix between profitability, market entry, market sizing, M&A, operations, and fit cases.
 
 Conversation so far:
 {history_text}
+
+Evaluate the candidate on these 7 dimensions (score 1-10, be HARSH and realistic):
+- structure: Did they use a clear framework? MECE thinking?
+- clarity: Was the answer precise and concise?
+- business_acumen: Did they show real business insight?
+- professionalism: Was the language formal and polished?
+- quantitative_rigor: Did they use numbers, estimates, data?
+- hypothesis_driven: Did they lead with a hypothesis?
+- communication: Was it structured like a real consultant would present?
 
 Respond ONLY with valid JSON, no extra text, no markdown:
 {{
@@ -53,13 +55,16 @@ Respond ONLY with valid JSON, no extra text, no markdown:
     "clarity": 1,
     "business_acumen": 1,
     "professionalism": 1,
-    "feedback": "your feedback here",
-    "what_good_looks_like": "example here"
+    "quantitative_rigor": 1,
+    "hypothesis_driven": 1,
+    "communication": 1,
+    "feedback": "harsh, specific feedback pointing out exactly what was wrong",
+    "what_good_looks_like": "a concrete example of what an excellent answer would include"
   }},
   "next_question": "your next question here"
 }}
 
-If no user answer yet, set assessment to null and ask a random opening case question from a random industry."""
+If no user answer yet, set assessment to null and ask a random opening case question from a random industry. Be strict."""
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
