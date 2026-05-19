@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import axios from "axios"
 
-const API = "https://case-interview-coach.onrender.com"
+const API = "https://mckinsey-coach.onrender.com"
 
 function ScoreBar({ label, score }) {
   const color = score >= 8 ? "#16a34a" : score >= 5 ? "#d97706" : "#dc2626"
