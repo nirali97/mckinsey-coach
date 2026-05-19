@@ -97,7 +97,7 @@ export default function App() {
   return (
     <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 16px", fontFamily: "system-ui, sans-serif" }}>
       <div style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Case Interview Coach</h1>
+        <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Pitch It</h1>
         <p style={{ color: "#6b7280", fontSize: 14, marginTop: 4 }}>Answers assessed on 7 dimensions including quantitative rigor and hypothesis-driven thinking.</p>
       </div>
 
