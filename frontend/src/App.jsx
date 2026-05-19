@@ -29,8 +29,11 @@ function FeedbackCard({ assessment }) {
       </div>
       <ScoreBar label="Structure" score={assessment.structure} />
       <ScoreBar label="Clarity" score={assessment.clarity} />
-      <ScoreBar label="Business acumen" score={assessment.business_acumen} />
+      <ScoreBar label="Business Acumen" score={assessment.business_acumen} />
       <ScoreBar label="Professionalism" score={assessment.professionalism} />
+      <ScoreBar label="Quantitative Rigor" score={assessment.quantitative_rigor} />
+      <ScoreBar label="Hypothesis Driven" score={assessment.hypothesis_driven} />
+      <ScoreBar label="Communication" score={assessment.communication} />
       <div style={{ marginTop: 12, padding: "10px 12px", background: "#fef3c7", borderLeft: "3px solid #f59e0b", borderRadius: "0 6px 6px 0", fontSize: 13, lineHeight: 1.5 }}>
         <strong>Partner feedback:</strong> {assessment.feedback}
       </div>
@@ -95,12 +98,12 @@ export default function App() {
     <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 16px", fontFamily: "system-ui, sans-serif" }}>
       <div style={{ marginBottom: 20 }}>
         <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>McKinsey Interview Coach</h1>
-        <p style={{ color: "#6b7280", fontSize: 14, marginTop: 4 }}>Answers assessed on structure, clarity, business acumen, and professionalism.</p>
+        <p style={{ color: "#6b7280", fontSize: 14, marginTop: 4 }}>Answers assessed on 7 dimensions including quantitative rigor and hypothesis-driven thinking.</p>
       </div>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center", flexWrap: "wrap" }}>
         {["case", "fit", "mixed"].map(t => (
-          <button key={t} onClick={() => setSessionType(t)}
+          <button key={t} onClick={() => { setSessionType(t); setTimeout(startSession, 0) }}
             style={{ padding: "5px 14px", borderRadius: 20, border: "1px solid #d1d5db", cursor: "pointer",
               background: sessionType === t ? "#1d4ed8" : "white",
               color: sessionType === t ? "white" : "#374151", fontSize: 13 }}>
